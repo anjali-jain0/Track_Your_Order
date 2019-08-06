@@ -1,0 +1,127 @@
+<!doctype html>
+<html>
+<head>
+<link href="/images/doctor3.css" rel="stylesheet" type="text/css" />
+<link href="/images/project5style.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light navbar-fixed-top">
+  <a class="navbar-brand" href="/">Track_It_Down</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="/search">Search in Map</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/workforce">Assign workforce</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<br><br>
+
+<h1 class="head">Manage Order</h1>
+<br>
+<div class="container">
+
+<% for(var i=0;i<data.length;i++) { %>
+<form method="post" action='/update/<%= data[i].itemid %>' >
+<div class="form-group">
+<span class="heading">Client Name:</span>
+<input class="form-control" type="text" name='name' value='<%= data[i].name %>'><br><br>
+</div>
+<div class="form-group">
+<span class="heading">Client Email:</span>
+<input class="form-control" type="email" value='<%= data[i].email %>'' name='email'><br><br>
+</div>
+<div class="form-group">
+<span class="heading">Client Phone:</span>
+<input class="form-control" value='<%= data[i].number %>' type="text" name='number'><br><br>
+</div>
+<div class="form-group">
+<span class="heading">Tracking Number:</span>
+<input class="form-control" value='<%= data[i].trackingpwd %>' type="text" name='trackno'><br><br>
+</div>
+<div class="form-group">
+<span class="heading">Item Deliver To :</span>
+<input class="form-control" value='<%= data[i].city %>, <%= data[i].state %>, <%= data[i].country %>' type="text" name='to'><br><br>
+</div>
+<% for(var j=0;j<item.length;j++) { %>
+<div class="form-group">
+<span class="heading">Item Id:</span>
+<input class="form-control" value='<%= item[j].itemid' type="text" name='itemid'><br><br>
+</div>
+<div class="form-group">
+<span class="heading">Item Coming From :</span>
+<input class="form-control" value='<%= item[j].city %>, <%= item[j].state %>, <%= item[j].country %>' type="text" name='from'><br><br>
+</div>
+<div class="form-group">
+<span class="heading">Item Price :</span>
+<input class="form-control" value='<%= item[j].price' type="text" name='itemprice'><br><br>
+</div>
+<div class="form-group">
+<span class="heading">Item Type :</span>
+<input class="form-control" value='<%= item[j].type' type="text" name='itemtype'><br><br>
+</div>
+<% } %>
+<div class="form-group">
+<span class="heading">Current Location</span>
+<input class="form-control"  value='<%= item[j].state %> , <%= item[j].country %>' type="text" name='currentloc'><br><br>
+</div>
+<!-- here a button of calculate distnace will come jo hr baar entered current location(jaise jaise item jis jis jgh p aayega
+vha ka admin current location update kr dega) of item se distance niklega ans uske hisab se vhi ka admin scheduled date likh dega -->
+
+<!-- yh teeno fileds ek alg se form submit bnegi jo delveryCharges databse se info leke value me bhr degi -->
+
+<!-- <div class="form-group">
+<span class="heading">Distance</span>
+<input class="form-control"  type="text" name='dist'><br><br>
+</div> -->
+
+<!-- <div class="form-group">
+<span class="heading">Number of days product will take</span>
+<input class="form-control"  type="text" name='days'><br><br>
+</div> -->
+
+<!-- calculate date - distance ke hisab se date aayegi from a database..
+
+ --><!-- <div class="form-group">
+<span class="heading">Scheduled Date</span>
+<input class="form-control"  type="text" name='sdate'><br><br>
+</div> -->
+
+<!-- acc to distance charges calculate button -->
+
+<!-- <div class="form-group">
+<span class="heading">Delivery Charges</span>
+<input class="form-control"  type="text" name='dcharges'><br><br>
+</div> -->
+
+<!-- <div class="form-group">
+<span class="heading">Status</span>
+<select name="status">
+  <option value="pending">Pending</option>
+  <option value="completed">Completed</option>
+</select>
+</div> -->
+
+<button type="submit" class="btn btn-info"> Approve Booking and update</button>
+
+<!-- after address search pass it to workforce one usko mail me wo adress bhejna h -->
+
+<!-- <a href='/searchaddress/<%= data[i].country %>/<%= data[i].state %>/<%= data[i].address %>'><button type="button" class="btn btn-warning">Search address</button></a> -->
+<br><br><br> 
+</form>
+<% } %>
+</div>
+
+
+</body>
+</html>
