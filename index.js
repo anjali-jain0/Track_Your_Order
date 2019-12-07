@@ -1,5 +1,7 @@
 var express=require('express');
 
+var request = require('request');
+
 var Nexmo=require('nexmo');
 
 const nexmo = new Nexmo({
@@ -74,11 +76,11 @@ var WorkforceSchema= new mongoose.Schema({
 	avail:Boolean
 });
 
-// var DeliveryChargesSchema = new mongoose.Schema({
-// 	distance:Number;
-// 	price:String;
-//  noofdays:String(days to travel a distnace of this much)
-// });
+var DeliveryChargesSchema = new mongoose.Schema({
+	distance:Object,
+	price:Number,
+ 	noofdays:String
+});
 
 var Booked= mongoose.model('Booked',BookedSchema); 
 var Item= mongoose.model('Item',ItemSchema); 
@@ -86,10 +88,15 @@ var Workforce= mongoose.model('Workforce',WorkforceSchema);
 var AdminUpdate = mongoose.model('AdminUpdate',AdminUpdateSchema);
 var DeliveryCharges = mongoose.model('DeliveryCharges',DeliveryChargesSchema);
 
-var item1=Item({itemid:1,country:'India',state:'Rajasthan',city:'Udaipur',price:'1000 rupees',type:'Clothing'}).save(function(err){
+var dc1 = DeliveryCharges({distance:{start:0,end:200},price:10,noofdays:'7-10 days'});
+var dc1 = DeliveryCharges({distance:{start:201,end:400},price:80,noofdays:'10-13 days'});
+
+var item1=Item({itemid:1,country:'India',state:'Rajasthan',city:'Udaipur',price:'1000 rupees',type:'Clothing'})
+	.save(function(err){
 	if(err) throw err;
 });
-var item2=Item({itemid:2,country:'India',state:'Madhya Pradesh',city:'Gwalior',price:'2000 rupees',type:'Electrical'}).save(function(err){
+var item2=Item({itemid:2,country:'India',state:'Madhya Pradesh',city:'Gwalior',price:'2000 rupees',type:'Electrical'})
+	.save(function(err){
 	if(err) throw err;
 });
 
@@ -159,42 +166,69 @@ app.get('/price',function(req,res){
 	res.render('pricing');
 });
 
-app.post('/pricing',urlencodedParser,function(req,res){
+// app.post('/pricing',urlencodedParser,function(req,res){
     
-    if(req.body.service=='Normal')
-    	var charges=100*20;
-    else
-    	var charges=100*40;
-	    res.render('pricecalculated',{scity:req.body.scity,dcity:req.body.dcity,scountry:req.body.scountry,
-	    	sstate:req.body.sstate,dcountry:req.body.dcountry,dstate:req.body.dstate,dist:100,
-	    	service:req.body.service,charges:charges});
-});
+//     if(req.body.service=='Normal')
+//     	var charges=100*20;
+//     else
+//     	var charges=100*40;
+// 	    res.render('pricecalculated',{scity:req.body.scity,dcity:req.body.dcity,scountry:req.body.scountry,
+// 	    	sstate:req.body.sstate,dcountry:req.body.dcountry,dstate:req.body.dstate,dist:100,
+// 	    	service:req.body.service,charges:charges});
+// });
 
 app.get('/orderdetails',function(req,res){
 
 	Booked.find({},function(err,data){
 		if(err) throw err;
-		var query={}
 		res.render('orderdetails',{data:data})
 	});
 });
 
-app.get('/manage/:id',function(req,res){
-    
+app.get('/manage/:id/:oid',function(req,res){
+
+    //what if multiple items??
+
     var query={itemid:req.params.id};
+    var query2={_id:req.params.oid}
     Item.find(query,function(err,data){
     	if(err) throw err;
     	app.locals.item=data;
     });
-    Booked.find(query,function(err,data){
+    Booked.find(query2,function(err,data){
 		if(err) throw err;
-		res.render('adminmanage',{data:data})
+		app.locals.data=data;
+		res.render('adminmanage',{distance:0,price:0,days:'0'});
 	});
+});
+
+app.get('/getdistance/:place1/:place2' , function(req,res){
+
+	console.log('came here');
+
+	request('http://www.distance24.org/route.json?stops=' + req.params.place1 + '|' + req.params.place2 ,function(err,result){
+		if(err) throw err;
+		console.log('kya hua')
+		var dis = result.distance;
+		console.log(result);
+		console.log(dis);
+		DeliveryCharges.find({},function(err,data){
+			if(err) throw err;
+			for(var i=0;i<data.length;i++){
+				var start=data[i].distance.start;
+				var end=data[i].distance.end;
+				if(dis>=start && dis<=end){
+					res.render('adminmanage',{distance:result.distance,price:data[i].price,days:data[i].noofdays});
+					break;
+				}
+			}
+		});
+	})
 });
 
 app.get('/remove/:id',function(req,res){
     
-    var query={itemid:req.params.id};
+    var query={_id:req.params.id};
 	Booked.remove(query,function(err){
 		if(err) throw err;
 	});
@@ -310,3 +344,8 @@ app.get('/clientmail/:name/:number',function(req,res){
 });
 
 app.listen('8080');
+
+//filter me uppercase lowercase input see
+//forms ka front end
+//maps, price and distance
+//give address to workforce

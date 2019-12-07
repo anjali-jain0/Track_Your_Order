@@ -50,8 +50,8 @@
         <td><%= data[i].name %> , <%= data[i].email %></td>
         <td><%= data[i].itemid %></td>
         <td><%= data[i].status %> </td>
-        <td><a href='/manage/<%= data[i].itemid %>'><button class='btn btn-info'>Manage</button></a></td>
-        <td><a href='/remove/<%= data[i].itemid %>'><button class='btn btn-info'>Remove as completed</button></a></td>
+        <td><a href='/manage/<%= data[i].itemid %>/<%= data[i]._id %>'><button class='btn btn-info'>Manage</button></a></td>
+        <td><a href='/remove/<%= data[i]._id %>'><button class='btn btn-info'>Remove as completed</button></a></td>
         </tr>
       <% } %>
     </tbody>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+    <link rel="stylesheet" type="text/css" href="demo.css" />
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+   <!--  <link rel="stylesheet" type="text/css" href="../template.css" /> -->
+    <!-- <script type="text/javascript" src='../test-credentials.js'></script>   -->  
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
+  <script type="text/javascript" src='../js-examples-rendering-helpers/iframe-height.js'></script></head>
+  <body id="geocode">
+    <div class="page-header">
+        <h1>Location - <!-- <span id='add'><%= address %></span> --></h1>
+    </div>
+    <div id="map"></div>
+    <div id="panel"></div>
+  </body>
+  <script>
+
+  //var add = document.getElementById('add').innerHTML;
+
+  function geocode(platform) {
+    var geocoder = platform.getGeocodingService(),
+      geocodingParameters = {
+        searchText: '5B Ambe Nagar Manva Kheda Road Sec-4 Hiran Magri Udaipur',
+        jsonattributes : 1
+      };
+
+    geocoder.geocode(
+      geocodingParameters,
+      onSuccess,
+      onError
+    );
+}
+
+function onSuccess(result) {
+  var locations = result.response.view[0].result;
+
+  addLocationsToMap(locations);
+  addLocationsToPanel(locations);
+}
+
+function onError(error) {
+  alert('Can\'t reach the remote server');
+}
+
+var platform = new H.service.Platform({
+  apikey: 'FHZdfD-Sei0rBWylp9tRZ-co1jkN2uoDIQvelzYO-E8'
+});
+var defaultLayers = platform.createDefaultLayers();
+
+var map = new H.Map(document.getElementById('map'),
+  defaultLayers.vector.normal.map,{
+  center: {lat:37.376, lng:-122.034},
+  zoom: 15,
+  pixelRatio: window.devicePixelRatio || 1
+});
+
+window.addEventListener('resize', () => map.getViewPort().resize());
+
+var locationsContainer = document.getElementById('panel');
+
+var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+
+var ui = H.ui.UI.createDefault(map, defaultLayers);
+
+var bubble;
+
+function openBubble(position, text){
+ if(!bubble){
+    bubble =  new H.ui.InfoBubble(
+      position,
+      {content: text});
+    ui.addBubble(bubble);
+  } else {
+    bubble.setPosition(position);
+    bubble.setContent(text);
+    bubble.open();
+  }
+}
+
+function addLocationsToPanel(locations){
+
+  var nodeOL = document.createElement('ul'),
+    i;
+
+  nodeOL.style.fontSize = 'small';
+  nodeOL.style.marginLeft ='5%';
+  nodeOL.style.marginRight ='5%';
+
+
+   for (i = 0;  i < locations.length; i += 1) {
+     var li = document.createElement('li'),
+        divLabel = document.createElement('div'),
+        address = locations[i].location.address,
+        content =  '' + address.label  + '';
+        position = {
+          lat: locations[i].location.displayPosition.latitude,
+          lng: locations[i].location.displayPosition.longitude
+        };
+
+      content += 'houseNumber: ' + address.houseNumber + '';
+      content += 'street: '  + address.street + '';
+      content += 'district: '  + address.district + '';
+      content += 'city: ' + address.city + '';
+      content += 'postalCode: ' + address.postalCode + '';
+      content += 'county: ' + address.county + '';
+      content += 'country: ' + address.country + '';
+      content += ' position: ' +
+        Math.abs(position.lat.toFixed(4)) + ((position.lat > 0) ? 'N' : 'S') +
+        ' ' + Math.abs(position.lng.toFixed(4)) + ((position.lng > 0) ? 'E' : 'W');
+
+      divLabel.innerHTML = content;
+      li.appendChild(divLabel);
+
+      nodeOL.appendChild(li);
+  }
+
+  locationsContainer.appendChild(nodeOL);
+}
+
+function addLocationsToMap(locations){
+  var group = new  H.map.Group(),
+    position,
+    i;
+
+  for (i = 0;  i < locations.length; i += 1) {
+    position = {
+      lat: locations[i].location.displayPosition.latitude,
+      lng: locations[i].location.displayPosition.longitude
+    };
+    marker = new H.map.Marker(position);
+    marker.label = locations[i].location.address.label;
+    group.addObject(marker);
+  }
+
+  group.addEventListener('tap', function (evt) {
+    map.setCenter(evt.target.getGeometry());
+    openBubble(
+       evt.target.getGeometry(), evt.target.label);
+  }, false);
+
+  map.addObject(group);
+  map.setCenter(group.getBoundingBox().getCenter());
+}
+
+geocode(platform);
+  </script>
+</html>

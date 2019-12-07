@@ -56,7 +56,7 @@
 <% for(var j=0;j<item.length;j++) { %>
 <div class="form-group">
 <span class="heading">Item Id:</span>
-<input class="form-control" value='<%= item[j].itemid' type="text" name='itemid'><br><br>
+<input class="form-control" value='<%= item[j].itemid %>' type="text" name='itemid'><br><br>
 </div>
 <div class="form-group">
 <span class="heading">Item Coming From :</span>
@@ -64,13 +64,12 @@
 </div>
 <div class="form-group">
 <span class="heading">Item Price :</span>
-<input class="form-control" value='<%= item[j].price' type="text" name='itemprice'><br><br>
+<input class="form-control" value='<%= item[j].price %>' type="text" name='itemprice'><br><br>
 </div>
 <div class="form-group">
 <span class="heading">Item Type :</span>
-<input class="form-control" value='<%= item[j].type' type="text" name='itemtype'><br><br>
+<input class="form-control" value='<%= item[j].type %>' type="text" name='itemtype'><br><br>
 </div>
-<% } %>
 <div class="form-group">
 <span class="heading">Current Location</span>
 <input class="form-control"  value='<%= item[j].state %> , <%= item[j].country %>' type="text" name='currentloc'><br><br>
@@ -79,16 +78,17 @@
 vha ka admin current location update kr dega) of item se distance niklega ans uske hisab se vhi ka admin scheduled date likh dega -->
 
 <!-- yh teeno fileds ek alg se form submit bnegi jo delveryCharges databse se info leke value me bhr degi -->
-
-<!-- <div class="form-group">
+<a href='/getdistance/<%= data[i].state %>/<%= item[j].state %>'><button type="button"  class='btn btn-warning'>Find Distance</button></a>
+<% } %>
+<div class="form-group">
 <span class="heading">Distance</span>
-<input class="form-control"  type="text" name='dist'><br><br>
-</div> -->
+<input class="form-control"  value="<%= distance %>" type="text" name='dist'><br><br>
+</div>
 
-<!-- <div class="form-group">
+<div class="form-group">
 <span class="heading">Number of days product will take</span>
-<input class="form-control"  type="text" name='days'><br><br>
-</div> -->
+<input class="form-control"  type="text" value='<%= days %>' name='days'><br><br>
+</div>
 
 <!-- calculate date - distance ke hisab se date aayegi from a database..
 
@@ -99,24 +99,24 @@ vha ka admin current location update kr dega) of item se distance niklega ans us
 
 <!-- acc to distance charges calculate button -->
 
-<!-- <div class="form-group">
+<div class="form-group">
 <span class="heading">Delivery Charges</span>
-<input class="form-control"  type="text" name='dcharges'><br><br>
-</div> -->
+<input class="form-control" value='<%= price %>' type="text" name='dcharges'><br><br>
+</div>
 
-<!-- <div class="form-group">
+<div class="form-group">
 <span class="heading">Status</span>
 <select name="status">
   <option value="pending">Pending</option>
   <option value="completed">Completed</option>
 </select>
-</div> -->
+</div>
 
 <button type="submit" class="btn btn-info"> Approve Booking and update</button>
 
-<!-- after address search pass it to workforce one usko mail me wo adress bhejna h -->
+<!-- after address search pass it to workforce one usko mail me wo address bhejna h -->
 
-<!-- <a href='/searchaddress/<%= data[i].country %>/<%= data[i].state %>/<%= data[i].address %>'><button type="button" class="btn btn-warning">Search address</button></a> -->
+<a href='/searchaddress/<%= data[i].country %>/<%= data[i].state %>/<%= data[i].address %>'><button type="button" class="btn btn-warning">Search address</button></a>
 <br><br><br> 
 </form>
 <% } %>

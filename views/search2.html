@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+ <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+    <link rel="stylesheet" type="text/css" href="demo.css" />
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+   <!--  <link rel="stylesheet" type="text/css" href="../template.css" /> -->
+    <!-- <script type="text/javascript" src='../test-credentials.js'></script>   -->  
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
+  <script type="text/javascript" src='../js-examples-rendering-helpers/iframe-height.js'></script>
+</head>
+<body>
+  <button onclick='cal()'>Cal</button>
+</body>
+<script>
+
+var platform = new H.service.Platform({
+  apikey: 'FHZdfD-Sei0rBWylp9tRZ-co1jkN2uoDIQvelzYO-E8'
+});
+
+function cal(platform) {
+  var router = platform.getRoutingService(),
+    parameters = {
+      waypoint0: '52.5160,13.3779',
+      waypoint1: '52.5206,13.3862',
+      mode: 'fastest;car;traffic:enabled',
+      departure: 'now'};
+
+  router.cal(parameters,
+    function (result) {
+      alert(result);
+    }, function (error) {
+      alert(error);
+    });
+}
+
+</script>
+</html>
+
+ 
