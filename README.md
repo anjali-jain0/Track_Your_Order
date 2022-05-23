@@ -12,7 +12,6 @@ For Users -
 * Book an order online giving details about email, contact info, address etc.
 * Email with a specific, unique tracking code is sent.
 * Track your order's present location.
-<br />
 For Admin - 
 * Manage the orders placed.
 * Update the orders location, distance from final destination, number of days to reach etc.
