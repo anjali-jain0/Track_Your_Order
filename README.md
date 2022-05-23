@@ -11,8 +11,8 @@ Track_Your_Order is a web app that helps you to book an order online and get a u
 For Users - 
 * Book an order online giving details about email, contact info, address etc.
 * Email with a specific, unique tracking code is sent.
-* Track your order's present location
-Admin- 
+* Track your order's present location.
+For Admin - 
 * Manage the orders placed.
 * Update the orders location, distance from final destination, number of days to reach etc.
 * Search for the destination address.
